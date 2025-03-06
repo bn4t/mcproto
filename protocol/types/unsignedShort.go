@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/binary"
 	"fmt"
+	"io"
 )
 
 type UnsignedShort uint16
@@ -19,4 +20,13 @@ func (us *UnsignedShort) Unmarshal(data []byte) error {
 	}
 	*us = UnsignedShort(binary.BigEndian.Uint16(data))
 	return nil
+}
+
+func WriteUnsignedShort(us UnsignedShort, w io.Writer) error {
+	buf, err := us.Marshal()
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(buf)
+	return err
 }

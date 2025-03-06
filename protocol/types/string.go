@@ -1,6 +1,9 @@
 package types
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
 type String struct {
 	Value string
@@ -49,4 +52,13 @@ func (s *String) Unmarshal(data []byte) error {
 	// Extract the string
 	s.Value = string(data[varIntSize : varIntSize+int(length)])
 	return nil
+}
+
+func WriteString(str String, w io.Writer) error {
+	buf, err := str.Marshal()
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(buf)
+	return err
 }
